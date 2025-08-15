@@ -2,6 +2,7 @@ from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
 from .image_processing import apply_tricolor_overlay  # Use relative import
 import io
+import os
 from PIL import Image
 
 app = Flask(__name__)
@@ -27,4 +28,5 @@ def tricolor():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
