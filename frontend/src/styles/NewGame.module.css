@@ -71,6 +71,7 @@
     transform: translate3d(0, 0, 0); /* Enable hardware acceleration */
     will-change: transform; /* Optimize for animations */
     perspective: 1000px; /* Add depth perception */
+    z-index: 1;
 }
 
 .player {
@@ -93,13 +94,13 @@
     width: 30px;
     height: 40px;
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    animation: fall linear forwards;
-    animation-duration: var(--fall-duration, 4s);
     top: -50px;
     z-index: 1;
     transform-style: preserve-3d;
     backface-visibility: hidden;
-    cursor: pointer;
+    transition: opacity 0.3s ease-out;
+    will-change: top, opacity;
+    animation: sway 2s infinite alternate ease-in-out;
 }
 
 .balloon::after {
@@ -131,18 +132,23 @@
 @keyframes fall {
     0% {
         transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 1;
     }
     25% {
         transform: translateY(112.5px) translateX(10px) rotate(5deg);
+        opacity: 1;
     }
     50% {
         transform: translateY(225px) translateX(-10px) rotate(-5deg);
+        opacity: 1;
     }
     75% {
         transform: translateY(337.5px) translateX(10px) rotate(5deg);
+        opacity: 1;
     }
     100% {
         transform: translateY(450px) translateX(-10px) rotate(-5deg);
+        opacity: 0;
     }
 }
 
@@ -173,7 +179,7 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -182,13 +188,15 @@
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    z-index: 10000;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     width: 80%;
     max-width: 400px;
     border: 2px solid #138808;
     animation: popIn 0.5s ease-out forwards;
+    margin: 0;
+    pointer-events: auto;
 }
 
 .finalScore {
@@ -233,5 +241,14 @@
     100% {
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
+    }
+}
+
+@keyframes sway {
+    0% {
+        transform: translateX(-5px) rotate(-5deg);
+    }
+    100% {
+        transform: translateX(5px) rotate(5deg);
     }
 }

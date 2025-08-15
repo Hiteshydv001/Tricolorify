@@ -21,6 +21,8 @@ export default function NewGame() {
             position,
             color,
             fallDuration: speed,
+            progress: 0, // Track falling progress
+            caught: false // Track if balloon is caught
         };
     }, []);
 
@@ -56,10 +58,46 @@ export default function NewGame() {
         setBalloons([]);
     }, []);
 
+    const updateBalloons = useCallback(() => {
+        setBalloons(prevBalloons => {
+            const updatedBalloons = prevBalloons.map(balloon => {
+                if (balloon.caught) return balloon;
+
+                // Update balloon progress
+                const newProgress = balloon.progress + (1 / (balloon.fallDuration * 60));
+                const balloonY = newProgress * 100; // Convert progress to percentage
+
+                // Check collision with basket
+                if (balloonY >= 85 && !balloon.caught) { // 85% is basket position
+                    const basketLeft = playerPosition - 10;
+                    const basketRight = playerPosition + 10;
+
+                    if (balloon.position >= basketLeft && balloon.position <= basketRight) {
+                        // Balloon is caught
+                        if (balloon.color === 'tricolor') {
+                            setScore(prev => prev + 10);
+                        } else {
+                            setScore(prev => Math.max(0, prev - 5));
+                        }
+                        return { ...balloon, caught: true };
+                    }
+                }
+
+                return { ...balloon, progress: newProgress };
+            });
+
+            // Remove balloons that are out of view or caught
+            return updatedBalloons.filter(balloon => 
+                balloon.progress < 1.2 && !balloon.caught
+            );
+        });
+    }, [playerPosition]);
+
     useEffect(() => {
         if (!gameStarted) return;
 
         const spawnInterval = setInterval(spawnBalloon, 1000);
+        const updateInterval = setInterval(updateBalloons, 1000 / 60); // 60 FPS updates
         const timer = setInterval(() => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
@@ -73,9 +111,10 @@ export default function NewGame() {
 
         return () => {
             clearInterval(spawnInterval);
+            clearInterval(updateInterval);
             clearInterval(timer);
         };
-    }, [gameStarted, spawnBalloon]);
+    }, [gameStarted, spawnBalloon, updateBalloons]);
 
     return (
         <div className={styles.wrapper}>
@@ -102,9 +141,10 @@ export default function NewGame() {
                             className={`${styles.balloon} ${styles[balloon.color]}`}
                             style={{
                                 left: `${balloon.position}%`,
-                                '--fall-duration': `${balloon.fallDuration}s`
+                                top: `${balloon.progress * 100}%`,
+                                transition: 'top 16.67ms linear',
+                                opacity: balloon.caught ? 0 : 1
                             }}
-                            onClick={() => handleBalloonClick(balloon)}
                         />
                     ))}
                     <div 
