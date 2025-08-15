@@ -1,4 +1,4 @@
 flask
 flask-cors
 pillow
-opencv-python
+opencv-python-headless

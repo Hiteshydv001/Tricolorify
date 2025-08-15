@@ -1,13 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
-import styles from '../styles/Home.module.css';
+import styles from '../styles/Game.module.css';
 
 const GAME_DURATION = 60; // seconds
-const BALLOON_SPAWN_RATE = 800; // ms
+const BALLOON_SPAWN_RATE = 700; // ms
 const BALLOON_MOVE_INTERVAL = 50; // ms
-const PLAYER_MOVE_SPEED = 3; // percentage
+const PLAYER_MOVE_SPEED = 4; // percentage
+
+// Create particles for background effect
+const createParticles = () => {
+  const particles = [];
+  for (let i = 0; i < 50; i++) {
+    particles.push({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 4 + 2,
+      speed: Math.random() * 4 + 4
+    });
+  }
+  return particles;
+};
 
 const CatchTricolor = () => {
-  const [playerPosition, setPlayerPosition] = useState(50); // percentage
+  const [playerPosition, setPlayerPosition] = useState(50);
+  const [isInitialized, setIsInitialized] = useState(false);
   const canvasRef = useRef(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState(0);
@@ -43,8 +58,10 @@ const CatchTricolor = () => {
     
     ctx.save();
     ctx.fillStyle = color;
-    ctx.font = 'bold 24px Arial';
+    ctx.font = 'bold 28px Poppins';
     ctx.textAlign = 'center';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 10;
     
     const text = value > 0 ? `+${value}` : value.toString();
     const x = basketRef.current.x + basketRef.current.width / 2;
@@ -71,6 +88,11 @@ const CatchTricolor = () => {
 
   const drawBalloon = (ctx, balloon) => {
     ctx.save();
+    
+    // Add balloon shadow
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 5;
     
     // Draw balloon string
     ctx.beginPath();
@@ -134,8 +156,17 @@ const CatchTricolor = () => {
     const basket = basketRef.current;
     const y = canvasRef.current.height - basket.height;
 
+    // Add shadow
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+    ctx.shadowBlur = 15;
+    ctx.shadowOffsetY = 5;
+
     // Draw basket body
-    ctx.fillStyle = '#8B4513';
+    const gradient = ctx.createLinearGradient(basket.x, y, basket.x, y + basket.height);
+    gradient.addColorStop(0, '#8B4513');
+    gradient.addColorStop(1, '#654321');
+    
+    ctx.fillStyle = gradient;
     ctx.beginPath();
     ctx.moveTo(basket.x, y);
     ctx.lineTo(basket.x + basket.width, y);
@@ -330,24 +361,41 @@ const CatchTricolor = () => {
 
   return (
     <div className={styles.gameSection}>
-      <div className={styles.flagEmoji}>🇮🇳</div>
-      <h2 className={styles.gameTitle}>Catch the Tricolor</h2>
-      
-      <div className={styles.gameInstructions}>
-        Use ← → arrow keys to move the basket.<br />
-        Catch tricolor balloons (+10 points) and avoid black ones (-5 points)!
-      </div>
-      
       <div className={styles.gameContainer}>
-        <div className={styles.gameStats}>
-          <div className={styles.gameScore}>Score: {score}</div>
-          <div className={styles.gameTimer}>Time: {timeLeft}s</div>
+        <div className={styles.gameHeader}>
+          <div className={styles.indiaText}>IN</div>
+          <h1 className={styles.gameTitle}>Catch the Tricolor</h1>
+          
+          <div className={styles.gameInstructions}>
+            Use ← → arrow keys to move the person<br />
+            Catch tricolor balloons (+10 points) and avoid black ones (-5 points)!<br />
+            <div className={styles.independenceText}>Happy Independence Day! Jai Hind!</div>
+          </div>
         </div>
-        
+
+        <div className={styles.scoreSection}>
+          <div className={styles.scoreText}>Score</div>
+          <div className={styles.scoreText}>{score}</div>
+        </div>
+
+        <div className={styles.timeSection}>
+          <div className={styles.timeText}>Time Left</div>
+          <div className={styles.timeText}>{timeLeft}s</div>
+        </div>
+
         <canvas 
           ref={canvasRef}
           className={styles.gameCanvas}
         />
+        
+        {!gameStarted && !gameOver && (
+          <button 
+            className={styles.gameButton}
+            onClick={startGame}
+          >
+            🚀 Start Game
+          </button>
+        )}
 
         {gameOver && (
           <div className={styles.gameOver}>
@@ -355,25 +403,17 @@ const CatchTricolor = () => {
             <h2>Game Over!</h2>
             <div className={styles.finalScore}>Score: {score}</div>
             <div className={styles.independenceMsg}>
-              Happy Independence Day!<br />
+              🎉 Amazing Performance! 🎉<br />
+              <strong>Happy Independence Day!</strong><br />
               Jai Hind! 🇮🇳
             </div>
             <button 
               className={styles.gameButton}
               onClick={startGame}
             >
-              Play Again
+              🔄 Play Again
             </button>
           </div>
-        )}
-        
-        {!gameStarted && !gameOver && (
-          <button 
-            className={styles.gameButton}
-            onClick={startGame}
-          >
-            Start Game
-          </button>
         )}
       </div>
     </div>

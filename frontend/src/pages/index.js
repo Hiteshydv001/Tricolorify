@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FileUpload from '../components/FileUpload';
-import CatchTricolor from '../components/CatchTricolor';
+import NewCatchTricolor from '../components/NewCatchTricolor';
 import ImagePreview from '../components/ImagePreview';
 import DownloadButton from '../components/DownloadButton';
 import styles from '../styles/Home.module.css';
@@ -160,7 +160,12 @@ export default function Home() {
           </div>
         </div>
         
-        <CatchTricolor />
+        <div style={{ 
+          width: '100%',
+          margin: '2rem 0'
+        }}>
+          <NewCatchTricolor />
+        </div>
 
         <footer className={styles.footer}>
           <span>Made with ❤️ for India | 15th August</span>
@@ -170,6 +175,11 @@ export default function Home() {
         @keyframes chakra-spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
         }
       `}</style>
     </>

@@ -14,3 +14,14 @@ html, body {
   --primary-green: #138808;
   --dark-blue: #0a2239;
 }
+
+@keyframes scoreFloat {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px) scale(1.2);
+    opacity: 0;
+  }
+}
