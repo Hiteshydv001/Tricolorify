@@ -70,6 +70,7 @@
     margin-bottom: 20px;
     transform: translate3d(0, 0, 0); /* Enable hardware acceleration */
     will-change: transform; /* Optimize for animations */
+    perspective: 1000px; /* Add depth perception */
 }
 
 .player {
@@ -93,9 +94,12 @@
     height: 40px;
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
     animation: fall linear forwards;
-    animation-duration: 4s;
+    animation-duration: var(--fall-duration, 4s);
     top: -50px;
     z-index: 1;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    cursor: pointer;
 }
 
 .balloon::after {
@@ -125,11 +129,20 @@
 }
 
 @keyframes fall {
-    from {
-        transform: translateY(0);
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
     }
-    to {
-        transform: translateY(450px);
+    25% {
+        transform: translateY(112.5px) translateX(10px) rotate(5deg);
+    }
+    50% {
+        transform: translateY(225px) translateX(-10px) rotate(-5deg);
+    }
+    75% {
+        transform: translateY(337.5px) translateX(10px) rotate(5deg);
+    }
+    100% {
+        transform: translateY(450px) translateX(-10px) rotate(-5deg);
     }
 }
 
@@ -161,7 +174,7 @@
     justify-content: center;
     gap: 15px;
     background: rgba(255, 255, 255, 0.95);
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -174,6 +187,8 @@
     -webkit-backdrop-filter: blur(5px);
     width: 80%;
     max-width: 400px;
+    border: 2px solid #138808;
+    animation: popIn 0.5s ease-out forwards;
 }
 
 .finalScore {
@@ -203,5 +218,20 @@
     100% {
         transform: translateY(-50px) scale(1.2);
         opacity: 0;
+    }
+}
+
+@keyframes popIn {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
     }
 }

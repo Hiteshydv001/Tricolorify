@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FileUpload from '../components/FileUpload';
-import NewCatchTricolor from '../components/NewCatchTricolor';
+import NewCatchTricolor from '../components/NewGame';
 import ImagePreview from '../components/ImagePreview';
 import DownloadButton from '../components/DownloadButton';
 import styles from '../styles/Home.module.css';
