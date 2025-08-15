@@ -53,26 +53,32 @@ function NewCatchTricolor() {
     if (!gameRunning || !gameAreaRef.current) return;
     
     const balloon = document.createElement('div');
-    balloon.className = `${styles.balloon}`;
+    balloon.className = styles.balloon;
     
+    // 70% chance for tricolor, 30% for black
     const isTricolor = Math.random() > 0.3;
-    if (isTricolor) {
-      balloon.classList.add(styles.tricolor);
-    } else {
-      balloon.classList.add(styles.black);
-    }
+    balloon.classList.add(isTricolor ? styles.tricolor : styles.black);
     balloon.dataset.type = isTricolor ? 'tricolor' : 'black';
     
-    balloon.style.left = Math.random() * 90 + 5 + '%';
+    // Random horizontal position (5% to 95% of game area width)
+    balloon.style.left = `${Math.random() * 90 + 5}%`;
     
-    const fallDuration = Math.random() * 2 + 3; // 3-5 seconds
-    balloon.style.animationDuration = `${fallDuration}s`;
+    // Random fall duration between 3-5 seconds
+    const fallDuration = Math.random() * 2 + 3;
+    balloon.style.animation = `${styles.fall} ${fallDuration}s linear forwards`;
     
     gameAreaRef.current.appendChild(balloon);
     balloons.current.push({
       element: balloon,
       type: isTricolor ? 'tricolor' : 'black'
     });
+    
+    // Remove balloon after animation ends
+    setTimeout(() => {
+      if (balloon && balloon.parentNode) {
+        balloon.parentNode.removeChild(balloon);
+      }
+    }, fallDuration * 1000);
   };
 
   const checkCollisions = () => {

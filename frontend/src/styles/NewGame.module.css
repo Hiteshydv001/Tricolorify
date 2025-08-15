@@ -95,6 +95,7 @@
     animation: fall linear forwards;
     animation-duration: 4s;
     top: -50px;
+    z-index: 1;
 }
 
 .balloon::after {
@@ -109,7 +110,12 @@
 }
 
 .tricolor {
-    background: linear-gradient(to bottom, #ff9933 33.33%, #ffffff 33.33%, #ffffff 66.66%, #138808 66.66%);
+    background: linear-gradient(to bottom, 
+        #ff9933 33.33%, 
+        #ffffff 33.33%, 
+        #ffffff 66.66%, 
+        #138808 66.66%
+    );
     border: 1px solid #333;
 }
 
@@ -119,10 +125,10 @@
 }
 
 @keyframes fall {
-    0% {
+    from {
         transform: translateY(0);
     }
-    100% {
+    to {
         transform: translateY(450px);
     }
 }
@@ -155,7 +161,7 @@
     justify-content: center;
     gap: 15px;
     background: rgba(255, 255, 255, 0.95);
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -163,9 +169,11 @@
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    z-index: 100;
+    z-index: 1000;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    width: 80%;
+    max-width: 400px;
 }
 
 .finalScore {

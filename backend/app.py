@@ -1,6 +1,6 @@
 from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
-from image_processing import apply_tricolor_overlay
+from .image_processing import apply_tricolor_overlay  # Use relative import
 import io
 from PIL import Image
 
