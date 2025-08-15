@@ -28,7 +28,7 @@ def apply_tricolor_overlay(image, add_chakra=True):
 
         # Add Ashoka Chakra
         if add_chakra:
-            chakra_path = os.path.join(os.path.dirname(__file__), 'static/ashoka_chakra.jpg')
+            chakra_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/ashoka_chakra.jpg')
             if os.path.exists(chakra_path):
                 chakra = Image.open(chakra_path).convert('RGBA')
                 chakra_size = min(width, height) // 3
