@@ -1,15 +1,14 @@
 services:
-  # Backend API service
   - type: web
     name: tricolorify-api
-    env: python
-    buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && python -m gunicorn --chdir /opt/render/project/src/backend app:app
+    runtime: python
+    region: singapore
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
       - key: PORT
-        value: 8000
-      - key: PYTHONPATH
-        value: /opt/render/project/src/backend
+        value: 10000
     healthCheckPath: /
