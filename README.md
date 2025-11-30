@@ -1,6 +1,6 @@
 # 🇮🇳 Tricolorify - Independence Day Special
 
-![Independence Day](public/indian-armed-forces.jpg)
+![Independence Day](https://github.com/Hiteshydv001/Tricolorify/blob/main/frontend/public/indian-armed-forces.jpg?raw=true)
 
 A patriotic web application to celebrate India's Independence Day! Create stunning tricolor profile pictures and play an engaging Independence Day themed game.
 
